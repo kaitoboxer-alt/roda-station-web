@@ -10,7 +10,7 @@
             margin: 0;
             padding: 0;
             background-color: #ffffff;
-            font-family: "Helvetica Neue", Arial, sans-serif;
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
             color: #333;
             display: flex;
             flex-direction: column;
@@ -19,7 +19,7 @@
             overflow-x: hidden;
         }
 
-        /* ＝＝＝ ① スプラッシュ画面（導入演出） ＝＝＝ */
+        /* ＝＝＝ スプラッシュ画面（罫線追加） ＝＝＝ */
         #splash-screen {
             position: fixed;
             top: 0;
@@ -34,37 +34,37 @@
             transition: opacity 1.5s ease;
         }
 
-        #splash-text {
-            font-size: 1.2rem;
-            letter-spacing: 0.3em;
-            color: #333;
+        #splash-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             opacity: 0;
             transition: opacity 2s ease;
+        }
+
+        #splash-text {
+            font-size: 1.1rem;
+            letter-spacing: 0.25em; /* 少し詰め気味に調整 */
+            color: #333;
             text-align: center;
-            padding: 0 20px;
+            padding: 20px 0;
             font-weight: 300;
+            line-height: 2.2;
+            position: relative;
+        }
+
+        /* 文字の上下に引く細いライン */
+        .splash-line {
+            width: 40px;
+            height: 1px;
+            background-color: #ccc;
+            transition: width 3s ease;
         }
 
         /* ＝＝＝ メインレイアウト ＝＝＝ */
-        header {
-            text-align: center;
-            padding: 100px 20px 40px;
-            width: 100%;
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            letter-spacing: 0.4em;
-            margin: 0;
-            font-weight: 300;
-        }
-
-        .subtitle {
-            font-size: 0.85rem;
-            color: #888;
-            margin-top: 15px;
-            line-height: 1.8;
-        }
+        header { text-align: center; padding: 100px 20px 40px; width: 100%; }
+        header h1 { font-size: 2.5rem; letter-spacing: 0.4em; margin: 0; font-weight: 300; }
+        .subtitle { font-size: 0.85rem; color: #888; margin-top: 15px; line-height: 1.8; }
 
         .main-visual-container {
             width: 100%;
@@ -112,11 +112,8 @@
             transition: opacity 1.5s ease-in-out;
         }
 
-        .media-content.active {
-            opacity: 1;
-        }
+        .media-content.active { opacity: 1; }
 
-        /* ＝＝＝ BANANAちゃんロゴ（左下固定） ＝＝＝ */
         .fixed-logo {
             position: fixed;
             bottom: 30px;
@@ -124,34 +121,26 @@
             width: 120px;
             height: auto;
             z-index: 100;
-            opacity: 0.7;
+            opacity: 0.8;
             transition: opacity 0.3s;
         }
-        .fixed-logo:hover {
-            opacity: 1;
-        }
+        .fixed-logo:hover { opacity: 1; }
 
-        footer {
-            text-align: center;
-            padding: 60px 20px;
-            color: #bbb;
-            font-size: 0.75rem;
-            width: 100%;
-        }
-
-        .footer-logo {
-            max-width: 150px;
-            margin-bottom: 20px;
-        }
+        footer { text-align: center; padding: 60px 20px; color: #bbb; font-size: 0.75rem; width: 100%; }
+        .footer-logo { max-width: 150px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
 <div id="splash-screen">
-    <div id="splash-text">試される大地のさらに北の果て──<br>オホーツク海側地方</div>
+    <div id="splash-content">
+        <div class="splash-line" id="line-top"></div>
+        <div id="splash-text">試される大地のさらに北の果て──<br>オホーツク海側地方</div>
+        <div class="splash-line" id="line-bottom"></div>
+    </div>
 </div>
 
-<img src="https://media.roda-station.com/RODA-STATION/banana_logo.png" alt="BANANA Logo" class="fixed-logo">
+<img src="https://media.roda-station.com/RODA-STATION/RODA-STATION.webp" alt="RODA Logo" class="fixed-logo">
 
 <header>
     <h1>RODA-STATION</h1>
@@ -160,7 +149,7 @@
 
 <main class="main-visual-container">
     <div class="media-wrapper" id="display-area">
-        <img src="https://media.roda-station.com/RODA-STATION/photos/001.webp" class="media-content active" alt="RODA Initial">
+        <img src="https://media.roda-station.com/RODA-STATION/photos/001.webp" class="media-content active">
     </div>
 </main>
 
@@ -184,66 +173,68 @@
 <script>
     const displayArea = document.getElementById('display-area');
     const splashScreen = document.getElementById('splash-screen');
-    const splashText = document.getElementById('splash-text');
+    const splashContent = document.getElementById('splash-content');
+    const lineTop = document.getElementById('line-top');
+    const lineBottom = document.getElementById('line-bottom');
     
     const photoBase = "https://media.roda-station.com/RODA-STATION/photos/";
     const videoBase = "https://media.roda-station.com/RODA-STATION/movies/";
     const totalPhotos = 206;
     const totalVideos = 9;
 
-    // ＝＝＝ スプラッシュ演出の実行 ＝＝＝
-    window.addEventListener('DOMContentLoaded', () => {
-        // 0.5秒後に文字をフェードイン
+    window.onload = () => {
+        // スプラッシュ表示開始
         setTimeout(() => {
-            splashText.style.opacity = "1";
+            splashContent.style.opacity = "1";
+            lineTop.style.width = "100px";    // 線が伸びる演出
+            lineBottom.style.width = "100px";
         }, 500);
 
-        // 3.5秒後にスプラッシュ画面を消す
+        // スプラッシュ終了（約7秒後）
         setTimeout(() => {
             splashScreen.style.opacity = "0";
             setTimeout(() => {
                 splashScreen.style.display = "none";
+                startRotation();
             }, 1500);
-        }, 3500);
-    });
+        }, 6500);
+    };
+
+    function startRotation() {
+        setTimeout(showNextMedia, 7000);
+    }
 
     function showNextMedia() {
-        const oldContent = displayArea.querySelector('.active');
-        if (oldContent) {
-            oldContent.classList.remove('active');
-            setTimeout(() => oldContent.remove(), 1500);
-        }
-
         const isVideo = Math.random() < 0.2; 
-        let element;
-
+        const element = isVideo ? document.createElement('video') : document.createElement('img');
+        
         if (isVideo) {
-            element = document.createElement('video');
             const idx = Math.floor(Math.random() * totalVideos) + 1;
             element.src = videoBase + idx.toString().padStart(3, '0') + ".mp4";
             element.muted = true;
             element.playsInline = true;
             element.autoplay = true;
-            element.onended = showNextMedia;
-            // ビデオがロードエラーの場合、次のメディアへ
-            element.onerror = showNextMedia;
+            element.onended = () => showNextMedia();
+            element.onerror = () => showNextMedia();
         } else {
-            element = document.createElement('img');
             const idx = Math.floor(Math.random() * totalPhotos) + 1;
             element.src = photoBase + idx.toString().padStart(3, '0') + ".webp";
-            setTimeout(showNextMedia, 7000);
-            // 画像がロードエラーの場合、次のメディアへ
-            element.onerror = showNextMedia;
+            element.onload = () => setTimeout(showNextMedia, 7000);
+            element.onerror = () => showNextMedia();
         }
 
         element.className = 'media-content';
         displayArea.appendChild(element);
-        setTimeout(() => element.classList.add('active'), 50);
-    }
 
-    // スプラッシュが終わる頃（約5秒後）に最初の切り替えを開始
-    setTimeout(showNextMedia, 5000);
-    
+        setTimeout(() => {
+            element.classList.add('active');
+            const contents = displayArea.querySelectorAll('.media-content');
+            if (contents.length > 1) {
+                contents[0].classList.remove('active');
+                setTimeout(() => contents[0].remove(), 1500);
+            }
+        }, 50);
+    }
 </script>
 </body>
 </html>
