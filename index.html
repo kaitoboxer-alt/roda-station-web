@@ -19,7 +19,7 @@
             overflow-x: hidden;
         }
 
-        /* ＝＝＝ スプラッシュ画面（罫線追加） ＝＝＝ */
+        /* ＝＝＝ スプラッシュ画面 ＝＝＝ */
         #splash-screen {
             position: fixed;
             top: 0;
@@ -34,37 +34,44 @@
             transition: opacity 1.5s ease;
         }
 
-        #splash-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        #splash-text {
+            font-size: 1.15rem;
+            letter-spacing: 0.2em;
+            color: #333;
             opacity: 0;
             transition: opacity 2s ease;
-        }
-
-        #splash-text {
-            font-size: 1.1rem;
-            letter-spacing: 0.25em; /* 少し詰め気味に調整 */
-            color: #333;
             text-align: center;
-            padding: 20px 0;
+            padding: 0 20px;
             font-weight: 300;
             line-height: 2.2;
-            position: relative;
         }
 
-        /* 文字の上下に引く細いライン */
-        .splash-line {
-            width: 40px;
-            height: 1px;
-            background-color: #ccc;
-            transition: width 3s ease;
+        /* ダーシ（──）の隙間を埋めるための指定 */
+        .dash {
+            letter-spacing: -0.2em; /* 文字間をマイナスにして隙間を詰める */
+            margin-right: 0.2em;    /* 詰めた分、後ろに少し余白を作る */
         }
 
         /* ＝＝＝ メインレイアウト ＝＝＝ */
-        header { text-align: center; padding: 100px 20px 40px; width: 100%; }
-        header h1 { font-size: 2.5rem; letter-spacing: 0.4em; margin: 0; font-weight: 300; }
-        .subtitle { font-size: 0.85rem; color: #888; margin-top: 15px; line-height: 1.8; }
+        header {
+            text-align: center;
+            padding: 100px 20px 40px;
+            width: 100%;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            letter-spacing: 0.4em;
+            margin: 0;
+            font-weight: 300;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 15px;
+            line-height: 1.8;
+        }
 
         .main-visual-container {
             width: 100%;
@@ -112,37 +119,32 @@
             transition: opacity 1.5s ease-in-out;
         }
 
-        .media-content.active { opacity: 1; }
-
-        .fixed-logo {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            width: 120px;
-            height: auto;
-            z-index: 100;
-            opacity: 0.8;
-            transition: opacity 0.3s;
+        .media-content.active {
+            opacity: 1;
         }
-        .fixed-logo:hover { opacity: 1; }
 
-        footer { text-align: center; padding: 60px 20px; color: #bbb; font-size: 0.75rem; width: 100%; }
-        .footer-logo { max-width: 150px; margin-bottom: 20px; }
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            color: #bbb;
+            font-size: 0.75rem;
+            width: 100%;
+        }
+
+        .footer-logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
 
 <div id="splash-screen">
-    <div id="splash-content">
-        <div class="splash-line" id="line-top"></div>
-        <span style=”letter-spacing:-.2em;width:2em;margin-right:.5em;”>――
-        <div id="splash-text">試される大地のさらに北の果て──<br>オホーツク海側地方</div>
-        </span>
-        <div class="splash-line" id="line-bottom"></div>
+    <div id="splash-text">
+        試される大地のさらに北の果て<span class="dash">──</span><br>
+        オホーツク海側地方
     </div>
 </div>
-
-<img src="https://media.roda-station.com/RODA-STATION/RODA-STATION.webp" alt="RODA Logo" class="fixed-logo">
 
 <header>
     <h1>RODA-STATION</h1>
@@ -175,9 +177,7 @@
 <script>
     const displayArea = document.getElementById('display-area');
     const splashScreen = document.getElementById('splash-screen');
-    const splashContent = document.getElementById('splash-content');
-    const lineTop = document.getElementById('line-top');
-    const lineBottom = document.getElementById('line-bottom');
+    const splashText = document.getElementById('splash-text');
     
     const photoBase = "https://media.roda-station.com/RODA-STATION/photos/";
     const videoBase = "https://media.roda-station.com/RODA-STATION/movies/";
@@ -185,14 +185,10 @@
     const totalVideos = 9;
 
     window.onload = () => {
-        // スプラッシュ表示開始
         setTimeout(() => {
-            splashContent.style.opacity = "1";
-            lineTop.style.width = "100px";    // 線が伸びる演出
-            lineBottom.style.width = "100px";
+            splashText.style.opacity = "1";
         }, 500);
 
-        // スプラッシュ終了（約7秒後）
         setTimeout(() => {
             splashScreen.style.opacity = "0";
             setTimeout(() => {
