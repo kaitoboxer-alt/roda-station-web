@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <link rel="stylesheet" href="footer.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RODA-STATION | Hokkaido Azure & White</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ＝＝＝ ① スプラッシュ画面（導入演出） ＝＝＝ */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1.5s ease;
+        }
+
+        #splash-text {
+            font-size: 1.2rem;
+            letter-spacing: 0.3em;
+            color: #333;
+            opacity: 0;
+            transition: opacity 2s ease;
+            text-align: center;
+            padding: 0 20px;
+            font-weight: 300;
+        }
+
+        /* ＝＝＝ メインレイアウト ＝＝＝ */
+        header {
+            text-align: center;
+            padding: 100px 20px 40px;
+            width: 100%;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            letter-spacing: 0.4em;
+            margin: 0;
+            font-weight: 300;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 15px;
+            line-height: 1.8;
+        }
+
+        .main-visual-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 60px 0;
+            flex-grow: 1;
+        }
+
+        .main-visual-container::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: #f0f0f0;
+            z-index: 0;
+        }
+
+        .media-wrapper {
+            width: 50vw;
+            min-width: 320px;
+            aspect-ratio: 16 / 9;
+            background-color: #fff;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.03);
+            position: relative;
+            z-index: 1;
+            border: 1px solid #f5f5f5;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .media-content {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .media-content.active {
+            opacity: 1;
+        }
+
+        /* ＝＝＝ BANANAちゃんロゴ（左下固定） ＝＝＝ */
+        .fixed-logo {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 120px;
+            height: auto;
+            z-index: 100;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        .fixed-logo:hover {
+            opacity: 1;
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 20px;
+            color: #bbb;
+            font-size: 0.75rem;
+            width: 100%;
+        }
+
+        .footer-logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="splash-screen">
+    <div id="splash-text">試される大地のさらに北の果て──<br>オホーツク海側地方</div>
+</div>
+
+<img src="https://media.roda-station.com/RODA-STATION/banana_logo.png" alt="BANANA Logo" class="fixed-logo">
+
+<header>
+    <h1>RODA-STATION</h1>
+    <p class="subtitle">Nature's purity, captured.<br>〜厨二病を拗らせたオジさんたち〜</p>
+</header>
+
+<main class="main-visual-container">
+    <div class="media-wrapper" id="display-area">
+        <img src="https://media.roda-station.com/RODA-STATION/photos/001.webp" class="media-content active" alt="RODA Initial">
+    </div>
+</main>
+
+<footer class="footer-container">
+    <div class="footer-content">
+        <div class="footer-left">
+            <img src="https://media.roda-station.com/RODA-STATION/RODA-STATION.webp" alt="RODA-STATION Logo" class="footer-logo">
+        </div>
+        <div class="footer-right">
+            <div class="contact-info">
+                <span class="contact-label">CONTACT</span><br>
+                <span class="contact-email">info@roda-station.com</span>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <small>&copy; 2026 RODA-STATION</small>
+    </div>
+</footer>
+
+<script>
+    const displayArea = document.getElementById('display-area');
+    const splashScreen = document.getElementById('splash-screen');
+    const splashText = document.getElementById('splash-text');
+    
+    const photoBase = "https://media.roda-station.com/RODA-STATION/photos/";
+    const videoBase = "https://media.roda-station.com/RODA-STATION/movies/";
+    const totalPhotos = 206;
+    const totalVideos = 9;
+
+    // ＝＝＝ スプラッシュ演出の実行 ＝＝＝
+    window.addEventListener('DOMContentLoaded', () => {
+        // 0.5秒後に文字をフェードイン
+        setTimeout(() => {
+            splashText.style.opacity = "1";
+        }, 500);
+
+        // 3.5秒後にスプラッシュ画面を消す
+        setTimeout(() => {
+            splashScreen.style.opacity = "0";
+            setTimeout(() => {
+                splashScreen.style.display = "none";
+            }, 1500);
+        }, 3500);
+    });
+
+    function showNextMedia() {
+        const oldContent = displayArea.querySelector('.active');
+        if (oldContent) {
+            oldContent.classList.remove('active');
+            setTimeout(() => oldContent.remove(), 1500);
+        }
+
+        const isVideo = Math.random() < 0.2; 
+        let element;
+
+        if (isVideo) {
+            element = document.createElement('video');
+            const idx = Math.floor(Math.random() * totalVideos) + 1;
+            element.src = videoBase + idx.toString().padStart(3, '0') + ".mp4";
+            element.muted = true;
+            element.playsInline = true;
+            element.autoplay = true;
+            element.onended = showNextMedia;
+            // ビデオがロードエラーの場合、次のメディアへ
+            element.onerror = showNextMedia;
+        } else {
+            element = document.createElement('img');
+            const idx = Math.floor(Math.random() * totalPhotos) + 1;
+            element.src = photoBase + idx.toString().padStart(3, '0') + ".webp";
+            setTimeout(showNextMedia, 7000);
+            // 画像がロードエラーの場合、次のメディアへ
+            element.onerror = showNextMedia;
+        }
+
+        element.className = 'media-content';
+        displayArea.appendChild(element);
+        setTimeout(() => element.classList.add('active'), 50);
+    }
+
+    // スプラッシュが終わる頃（約5秒後）に最初の切り替えを開始
+    setTimeout(showNextMedia, 5000);
+    
+</script>
+</body>
+</html>
